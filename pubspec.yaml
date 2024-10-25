@@ -1,0 +1,20 @@
+name: flutter_navigator
+description: turn by tun navigator
+version: 0.1.0+1
+
+
+environment:
+  sdk: ^3.4.0
+  flutter: ^3.22.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  maplibre_gl: ^0.20.0
+  text_to_speech: ^0.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^6.0.0
