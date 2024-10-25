@@ -1,4 +1,5 @@
-import 'package:flutter_navigator/src/core/model/direction_route_response.dart';
+
+import 'package:flutter_navigator/src/model/direction_route_response.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 /// A class that holds a list of instructions coordinates and a list of instructions index.

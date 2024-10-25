@@ -1,5 +1,6 @@
-import 'package:flutter_navigator/src/core/model/instruction.dart';
-import 'package:flutter_navigator/src/core/model/points.dart';
+
+import 'package:flutter_navigator/src/model/instruction.dart';
+import 'package:flutter_navigator/src/model/points.dart';
 
 /// Represents a path in a navigation response containing various properties
 /// such as distance, weight, and instructions for navigation.

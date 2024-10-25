@@ -1,6 +1,8 @@
-import 'package:flutter_navigator/src/core/model/hints.dart';
-import 'package:flutter_navigator/src/core/model/info.dart';
-import 'package:flutter_navigator/src/core/model/paths.dart';
+
+
+import 'package:flutter_navigator/src/model/hints.dart';
+import 'package:flutter_navigator/src/model/info.dart';
+import 'package:flutter_navigator/src/model/paths.dart';
 
 /// Represents the response for a direction route, which includes hints,
 /// informational data, and a list of paths for the route.

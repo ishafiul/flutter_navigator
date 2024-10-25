@@ -1,4 +1,5 @@
-import 'package:flutter_navigator/src/core/state/value_wraper.dart';
+
+import 'package:flutter_navigator/src/state/core/value_wraper.dart';
 
 class StateManager {
   final Map<String, StateValue> _states = {};
