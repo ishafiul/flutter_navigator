@@ -1,5 +1,5 @@
 
-import 'package:flutter_navigator/src/model/direction_route_response.dart';
+import 'package:flutter_navigator/src/model/open_route_service.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 /// A class that holds a list of instructions coordinates and a list of instructions index.
@@ -41,7 +41,7 @@ class InstructionsCoordsIndexListAndUsersLoc {
   final List<int> instructionsIndexList;
 
   /// A direction route response.
-  final DirectionRouteResponse directionRouteResponse;
+  final OpenrouteserviceResponse directionRouteResponse;
 
   /// A user's location.
   final LatLng usersLatLng;

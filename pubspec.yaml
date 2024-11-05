@@ -10,8 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  json: ^0.20.2
   maplibre_gl: ^0.20.0
-  text_to_speech: ^0.2.3
+  flutter_tts: ^4.0.2
+  expandable_bottom_sheet: ^1.1.1+1
 
 dev_dependencies:
   flutter_test:

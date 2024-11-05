@@ -1,0 +1,75 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_navigator/src/model/open_route_service.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
+class AudioInstructionController extends ChangeNotifier {
+  // text audio ko instace yaha banayera enable audio disable garauney yaha bata
+
+  /// List of [Instruction] identifier which is already spoken
+  ///
+  final List<String> _hadSpokenInstructionsIdentifier = [];
+
+  /// Getter for [_hadSpokenInstructionsIdentifier]
+  ///
+  List<String> get hadSpokenInstructionsIdentifier =>
+      _hadSpokenInstructionsIdentifier;
+
+  /// [TextToSpeech] instance
+  ///
+  final FlutterTts tts = FlutterTts();
+
+  /// Enable audio instance variable
+  ///
+  bool enableAudio = true;
+
+  /// Call this method to recite the instruction
+  /// Remember: This method internally checks [enableAudio]
+  /// if false then it will not work.
+  ///
+  void speakInstruction({
+    required InstructionStep instruction,
+  }) async {
+    if (!_checkIfInstructionIsAlreadySpoken(instruction: instruction)) {
+      // if the instruction is not spoken then add it to the list
+      _addSpokenInstructionsToList(instruction: instruction);
+
+      //check if the audio is enabled
+      if (enableAudio) {
+        await tts.speak('bn-BD');
+        if (instruction.instruction == null && kDebugMode) {
+          await tts.speak('No Text found');
+        } else {
+          await tts.speak(instruction.instruction);
+        }
+      }
+    }
+  }
+
+  /// Add spoken instruction to the list of [hadSpokenInstructionsIdentifier]
+  ///
+  void _addSpokenInstructionsToList({
+    required InstructionStep instruction,
+  }) {
+    _hadSpokenInstructionsIdentifier.add(
+      '${instruction.distance}_${instruction.type}_${instruction.duration}',
+    );
+  }
+
+  /// Method which sets the value for [enableAudio] variable
+  ///
+  void setEnableAudio({bool enableAudio = true}) {
+    this.enableAudio = enableAudio;
+    notifyListeners();
+  }
+
+  /// This method check if any [Instruction] is already spoken
+  /// That means it is already present in [hadSpokenInstructionsIdentifier]
+  ///
+  bool _checkIfInstructionIsAlreadySpoken({
+    required InstructionStep instruction,
+  }) {
+    return hadSpokenInstructionsIdentifier.contains(
+      '${instruction.distance}_${instruction.type}_${instruction.duration}',
+    );
+  }
+}

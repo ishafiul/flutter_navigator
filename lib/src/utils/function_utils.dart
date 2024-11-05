@@ -1,10 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter_navigator/src/model/audio_instruction.dart';
-import 'package:flutter_navigator/src/model/direction_route_response.dart';
-import 'package:flutter_navigator/src/model/instruction.dart';
-import 'package:flutter_navigator/src/model/instructions_coords_and_index_list.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 String calculateTime({required int milliseconds}) {
@@ -71,13 +65,14 @@ bool isCoordinateInside({
     return false;
   }
 }
+/*
 
-Future<Instruction> computingCoordinateInsideCircle(
+Future<Step?> computingCoordinateInsideCircle(
   InstructionsCoordsIndexListAndUsersLoc instructionsCoordsIndexListAndUsersLoc,
 ) async {
   final directionRouteResponse1 =
       instructionsCoordsIndexListAndUsersLoc.directionRouteResponse;
-  var instruction = Instruction(text: '');
+  Step? instruction;
   final instructionPoints =
       instructionsCoordsIndexListAndUsersLoc.instructionsCoordsList;
 
@@ -126,3 +121,4 @@ Future<Instruction> computingCoordinateInsideCircle(
 //       break;
 //   }
 // }
+*/

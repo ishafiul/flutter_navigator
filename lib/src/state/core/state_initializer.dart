@@ -1,4 +1,4 @@
-import 'package:flutter_navigator/src/state/bearing_change.dart';
+import 'package:flutter_navigator/src/state/bearing_controller.dart';
 
 class StateInitializer {
   factory StateInitializer() {
@@ -7,12 +7,12 @@ class StateInitializer {
   }
 
   StateInitializer._privateConstructor(){
-    BearingChange();
+    BearingController();
   }
 
   static StateInitializer? _instance = StateInitializer._privateConstructor();
 
   void disposeAll() {
-    BearingChange.dispose();
+    BearingController.dispose();
   }
 }

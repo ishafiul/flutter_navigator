@@ -1,8 +1,9 @@
+/*
 import 'package:flutter_navigator/src/model/direction_route_response.dart';
 import 'package:flutter_navigator/src/state/core/state_manager.dart';
 import 'package:flutter_navigator/src/state/core/value_wraper.dart';
 
-class InstructionsChange {
+class InstructionsController {
   final StateManager _stateManager = StateManager();
 
   StateValue<List<int>> get instructionsIndexList =>
@@ -27,7 +28,7 @@ class InstructionsChange {
   }
 
   void updateInstructionsCoordinatesList({
-    required DirectionRouteResponse directionRouteResponse,
+    required OpenrouteserviceResponse directionRouteResponse,
   }) {
     final instructions =
         directionRouteResponse.paths![0].instructions?.reversed.toList() ?? [];
@@ -42,3 +43,4 @@ class InstructionsChange {
     instructionsCoordinatesList.value = coordinatesList;
   }
 }
+*/

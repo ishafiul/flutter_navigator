@@ -1,5 +1,0 @@
-
-enum NavigationProfile {
-  car,
-  foot,
-}
