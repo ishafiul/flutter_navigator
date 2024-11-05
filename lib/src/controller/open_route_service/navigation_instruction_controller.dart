@@ -79,9 +79,9 @@ class NavigationInstructionController extends ChangeNotifier {
         computingCoordinateInsideCircle(instructionsCoordsIndexListAndUsersLoc);
     // await compute(computingCoordinateInsideCircle,
     //     instructionsCoordsIndexListAndUsersLoc);
-    debugPrint(
+    /*debugPrint(
       'RouteNavigationRouteController outCompute ${instruction?.toJson()}',
-    );
+    );*/
 
     if (instruction?.instruction != null &&
         instruction!.instruction.isNotEmpty) {
@@ -121,11 +121,11 @@ class NavigationInstructionController extends ChangeNotifier {
           usersLatLng: instructionsCoordsIndexListAndUsersLoc.usersLatLng,
         )) {
           // TODO: make he direction route response a single variable
-          print('hola ${
+          /*print('hola ${
             directionRouteResponse1
                 .features.first.properties.segments.first.steps.reversed
                 .toList()[index]
-          }');
+          }');*/
           instruction = directionRouteResponse1
               .features.first.properties.segments.first.steps.reversed
               .toList()[index];

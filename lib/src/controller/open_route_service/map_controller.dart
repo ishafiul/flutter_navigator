@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_navigator/src/controller/open_route_service/navigation_instruction_controller.dart';
@@ -134,7 +135,7 @@ class MapScreenController extends ChangeNotifier {
     userSpeedNotifier.setUserSpeed(speed: speed);*/
 
     // Navigation instruction check
-    navigationInstructionController.checkIsCoordinateInsideCircle(
+    await navigationInstructionController.checkIsCoordinateInsideCircle(
       directionRouteResponse: directionRouteResponse,
       usersLatLng: userLocation1.position,
     );
@@ -145,11 +146,29 @@ class MapScreenController extends ChangeNotifier {
   Future<void> addSourceAndLineLayer(
     Map<String, dynamic> modifiedResponse,
   ) async {
+    print('modifiedResponse: $modifiedResponse');
     // add start and end marker i.e --> green and red respectively
     await addStartAndEndMarker();
 
+    /// List of coordinates (LatLng) that represent the points of the polyline.
+    final polylineCoordinates = (modifiedResponse['geometry']['coordinates']
+            as List<dynamic>)
+        .map<LatLng>((point) => LatLng(point[1] as double, point[0] as double))
+        .toList();
+
+    /// Add the polyline to the map using the map controller. The polyline
+    /// connects the points in `_polylineCoordinates`. The polyline is red,
+    /// has a width of 5 pixels, and is slightly transparent (opacity: 0.8).
+    await _mapController!.addLine(
+      LineOptions(
+        geometry: polylineCoordinates, // Coordinates of the polyline
+        lineColor: '#0000FF', //blue
+        lineJoin: 'round',
+        lineWidth: 6,
+      ),
+    );
     // feature collection object
-    final fills = {
+    /*final fills = {
       'type': 'FeatureCollection',
       'features': [
         {
@@ -160,14 +179,18 @@ class MapScreenController extends ChangeNotifier {
         },
       ],
     };
-
+    print("fills");
+    print(modifiedResponse['geometry']);
+    if(_mapController == null){
+     print("mapController is null");
+    }
     // Remove lineLayer and source if it exists
     await _mapController!.removeLayer('lines');
     await _mapController!.removeSource('fills');
 
     // Add new source and lineLayer
     await _mapController!
-        .addSource('fills', GeojsonSourceProperties(data: fills));
+        .addSource('fills', GeojsonSourceProperties(data: jsonEncode(fills)));
     await _mapController!.addLineLayer(
       'fills',
       'lines',
@@ -177,7 +200,7 @@ class MapScreenController extends ChangeNotifier {
         lineJoin: 'round',
         lineWidth: 6,
       ),
-    );
+    );*/
   }
 
   /// This method adds start and end marker which is circle

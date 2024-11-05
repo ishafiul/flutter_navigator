@@ -20,34 +20,41 @@ class MapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late MapLibreMapController? mbController;
     // map controller
     final mapController = MapControllerProvider.of(context);
     //
     return MapLibreMap(
       styleString:
           'https://api.maptiler.com/maps/basic-v2/style.json?key=dBeUxBwm8DpdeII9BuGm',
-      onMapCreated: (mapLibreController) {
+      onMapCreated: (mapLibreController) async {
+        mbController = mapLibreController;
         // method which gets executed after the map has been initialized
         mapController.onMapCreated(mapLibreMapController: mapLibreController);
       },
-      onStyleLoadedCallback: () {
+      onStyleLoadedCallback: () async {
         // function to be called after the style has been loadded
-        _onStyleLoadedCallback(
+        await _onStyleLoadedCallback(
           mapController.mapController!,
           directionRouteResponse,
           mapController.mapZoomLevel,
         );
         final routeResponse = <String, dynamic>{
           'geometry':
-              directionRouteResponse.features.first.geometry.coordinates,
+              directionRouteResponse.features.first.geometry.toJson(),
           'duration': directionRouteResponse
               .features.first.properties.segments.first.steps.first.duration,
           'distance': directionRouteResponse
               .features.first.properties.segments.first.steps.first.distance,
         };
-        mapController.addSourceAndLineLayer(routeResponse);
+        await mapController.addSourceAndLineLayer(routeResponse);
       },
-      onUserLocationUpdated: mapController.onUserLocationUpdated,
+      onUserLocationUpdated: (location) {
+        if(mbController  != null){
+          mapController.onUserLocationUpdated(location);
+        }
+
+      },
       initialCameraPosition: CameraPosition(
         target: LatLng(
           directionRouteResponse.features.first.geometry.coordinates.first.last,
