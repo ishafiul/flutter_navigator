@@ -1,8 +1,13 @@
+import 'package:example/utils/marker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_navigator/flutter_navigator.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 final json = {
   "type": "FeatureCollection",
@@ -352,7 +357,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  OpenrouteserviceResponse? data;
+  Position? currentLocation;
 
   Future<void> fetchDirections() async {
     bool serviceEnabled;
@@ -383,27 +388,8 @@ class _MyAppState extends State<MyApp> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-    final location = await Geolocator.getCurrentPosition();
-    final url = Uri.parse(
-        'http://192.168.0.101:8085/ors/v2/directions/driving-car?start=${location.longitude}%2C${location.latitude}&end=90.3858%2C23.7559');
-
-    try {
-      // Send the GET request
-      final response = await http.get(url);
-
-      // Check for a successful response
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        data = OpenrouteserviceResponse.fromJson(jsonDecode(response.body));
-        setState(() {
-
-        });
-      } else {
-        print('Failed to load directions. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error occurred: $e');
-    }
+    currentLocation = await Geolocator.getCurrentPosition();
+    setState(() {});
   }
 
   @override
@@ -419,7 +405,121 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: data != null ? FlutterNavigator(directionRouteResponse: data!): SizedBox(),
+      home: currentLocation != null
+          ? MapScreen(
+              currentLocation: currentLocation!,
+            )
+          : SizedBox(),
+    );
+  }
+}
+
+class MapScreen extends StatefulWidget {
+  const MapScreen({super.key, required this.currentLocation});
+
+  final Position currentLocation;
+
+  @override
+  State<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  MapLibreMapController? controller;
+  OpenrouteserviceResponse? data;
+  Line? line;
+
+  _getData(LatLng toLocation) async {
+    final currentLocation = await Geolocator.getLastKnownPosition();
+    final url = Uri.parse(
+        'http://192.168.0.101:8085/ors/v2/directions/driving-car?start=${currentLocation!.longitude}%2C${currentLocation.latitude}&end=${toLocation.longitude}%2C${toLocation.latitude}');
+
+    try {
+      // Send the GET request
+      final response = await http.get(url);
+
+      // Check for a successful response
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        data = OpenrouteserviceResponse.fromJson(jsonDecode(response.body));
+        setState(() {});
+      } else {
+        print('Failed to load directions. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: data == null ? null : FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FlutterNavigator(
+                directionRouteResponse: data!,
+              ),
+            ),
+          );
+        },
+        child: Icon(Icons.directions),
+      ),
+      body: MapLibreMap(
+        styleString:
+            'https://api.maptiler.com/maps/basic-v2/style.json?key=dBeUxBwm8DpdeII9BuGm',
+        initialCameraPosition: CameraPosition(
+          target: LatLng(
+            widget.currentLocation.latitude,
+            widget.currentLocation.longitude,
+          ),
+          zoom: 15.0,
+        ),
+        onMapCreated: (c) {
+          controller = c;
+        },
+        onStyleLoadedCallback: () async {
+          final ByteData bytes =
+              await rootBundle.load('assets/location-marker.png');
+          final Uint8List list = bytes.buffer.asUint8List();
+          controller?.addImage("marker_image", list);
+        },
+        myLocationEnabled: true,
+        onMapClick: (point, coordinates) async {
+          MarkerManager.instance.addMarker(
+            location: coordinates,
+            mapController: controller!,
+          );
+          await _getData(coordinates);
+          print(data?.features.first.geometry.coordinates
+              .map<LatLng>(
+                (point) => LatLng(
+                  point[1],
+                  point[0],
+                ),
+              )
+              .toList());
+          if (line != null) {
+            controller?.removeLine(line!);
+          }
+
+          line = await controller!.addLine(
+            LineOptions(
+              geometry: data?.features.first.geometry.coordinates
+                  .map<LatLng>(
+                    (point) => LatLng(
+                      point[1],
+                      point[0],
+                    ),
+                  )
+                  .toList(),
+              lineColor: '#0000FF',
+              lineJoin: 'round',
+              lineWidth: 6,
+            ),
+          );
+        },
+      ),
     );
   }
 }

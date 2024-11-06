@@ -14,7 +14,7 @@ class MapWidget extends StatelessWidget {
   const MapWidget({
     required this.directionRouteResponse, super.key,
   });
-  /// [DirectionRouteResponse]instance
+  /// [OpenrouteserviceResponse]instance
   ///
   final OpenrouteserviceResponse directionRouteResponse;
 
@@ -49,12 +49,11 @@ class MapWidget extends StatelessWidget {
         };
         await mapController.addSourceAndLineLayer(routeResponse);
       },
-      onUserLocationUpdated: (location) {
+      /*onUserLocationUpdated: (location) {
         if(mbController  != null){
           mapController.onUserLocationUpdated(location);
         }
-
-      },
+      },*/
       initialCameraPosition: CameraPosition(
         target: LatLng(
           directionRouteResponse.features.first.geometry.coordinates.first.last,
@@ -113,44 +112,3 @@ class MapWidget extends StatelessWidget {
   }
 }
 
-//  Widget buildMapUi() {
-//     return MaplibreMap(
-//       styleString:
-//           'https://tiles.basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-//       onMapCreated: ,
-//       onStyleLoadedCallback: _onStyleLoadedCallback,
-//       initialCameraPosition: CameraPosition(
-//         target: LatLng(
-//             directionRouteResponse
-//                 .paths![0].snappedWaypoints!.coordinates!.first[1],
-//             directionRouteResponse
-//                 .paths![0].snappedWaypoints!.coordinates!.first[0]),
-//         zoom: mapZoomLevel,
-//       ),
-//       minMaxZoomPreference: const MinMaxZoomPreference(6, 19),
-//       myLocationEnabled: true,
-//       trackCameraPosition: true,
-//       compassEnabled: false,
-//       compassViewPosition: CompassViewPosition.TopRight,
-//       myLocationTrackingMode: MyLocationTrackingMode.TrackingGPS,
-//       myLocationRenderMode: MyLocationRenderMode.GPS,
-//       onUserLocationUpdated: (userLocation) {
-//         this.userLocation = userLocation;
-
-//         if (!isSimulateRouting) {
-//           navigationController.checkIsCoordinateInsideCircle(
-//               usersLatLng: userLocation.position);
-//           controller.animateCamera(CameraUpdate.newCameraPosition(
-//               CameraPosition(
-//                   target: LatLng(userLocation.position.latitude,
-//                       userLocation.position.longitude),
-//                   zoom: mapZoomLevel,
-//                   bearing: userLocation.bearing!)));
-
-//           navigationController.updateSpeed(speed: userLocation.speed!);
-//           navigationController.updateBearing(bearing: userLocation.bearing!);
-//         }
-//       },
-//       // cameraTargetBounds: CameraTargetBounds(LatLngBounds( southwest: const LatLng(26.3978980576, 80.0884245137), northeast: const LatLng(26.3978980576, 80.0884245137))),
-//     );
-//   }
