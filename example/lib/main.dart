@@ -1,7 +1,7 @@
 import 'package:example/utils/marker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_navigator/flutter_navigator.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -345,7 +345,8 @@ final json = {
 };
 final data = OpenrouteserviceResponse.fromJson(json);
 
-void main() {
+void main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -431,7 +432,7 @@ class _MapScreenState extends State<MapScreen> {
   _getData(LatLng toLocation) async {
     final currentLocation = await Geolocator.getLastKnownPosition();
     final url = Uri.parse(
-        'http://192.168.0.101:8085/ors/v2/directions/driving-car?start=${currentLocation!.longitude}%2C${currentLocation.latitude}&end=${toLocation.longitude}%2C${toLocation.latitude}');
+        '${dotenv.env['ROUTE_SERVER_HOST']}/ors/v2/directions/driving-car?start=${currentLocation!.longitude}%2C${currentLocation.latitude}&end=${toLocation.longitude}%2C${toLocation.latitude}');
 
     try {
       // Send the GET request
@@ -467,7 +468,7 @@ class _MapScreenState extends State<MapScreen> {
       ),
       body: MapLibreMap(
         styleString:
-            'https://api.maptiler.com/maps/basic-v2/style.json?key=dBeUxBwm8DpdeII9BuGm',
+            'https://api.maptiler.com/maps/basic-v2/style.json?key=${dotenv.env['MAP_KEY']}',
         initialCameraPosition: CameraPosition(
           target: LatLng(
             widget.currentLocation.latitude,

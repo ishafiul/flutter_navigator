@@ -49,11 +49,11 @@ class MapWidget extends StatelessWidget {
         };
         await mapController.addSourceAndLineLayer(routeResponse);
       },
-      /*onUserLocationUpdated: (location) {
+      onUserLocationUpdated: (location) {
         if(mbController  != null){
           mapController.onUserLocationUpdated(location);
         }
-      },*/
+      },
       initialCameraPosition: CameraPosition(
         target: LatLng(
           directionRouteResponse.features.first.geometry.coordinates.first.last,
